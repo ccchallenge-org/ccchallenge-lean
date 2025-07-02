@@ -15,8 +15,7 @@ Ideally, please add all references to [https://ccchallenge.org/](https://ccchall
 to them by doing,  e.g. `https://ccchallenge.org/#BohmSontacchi1978`.
 
 ### Choose either option
-- [ ] I plan on working on this result statement and proof
-- [ ] I plan on working on this result statement only
-- [ ] I plan on working on this result proof only
-- [ ] This issue is up for grabs: I would like to see this result statement added by somebody else
-- [ ] This issue is up for grabs: I would like to see this result proof added by somebody else
+- [ ] I plan on working on the statement
+- [ ] I plan on working on the proof
+- [ ] This issue is up for grabs: someone else can add the statement
+- [ ] This issue is up for grabs: someone else can add the proof
