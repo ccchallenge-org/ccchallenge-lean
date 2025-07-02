@@ -2,7 +2,7 @@
 name: Result to add
 about: Suggest an idea for a result to add
 title: ''
-labels: 'result'
+labels: ['result', 'missing statement', 'missing proof']
 assignees: ''
 
 ---
