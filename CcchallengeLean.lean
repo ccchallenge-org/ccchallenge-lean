@@ -1,1 +1,1 @@
-import CcchallengeLean.Basic
+import CCchallengeLean.Collatz
