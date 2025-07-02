@@ -47,7 +47,7 @@ theorem Rozier2022
 theorem Rozier2022_corollary
     (x : ℕ)
     (n : ℕ)
-    (k: ℕ)
+    (k : ℕ)
     (h : (T^[n]) x = x)
-    (h2 : (oddIterateIndices_T x n).card = k) : x < 3^k :=
+    (h2 : (numOddIterates_T x n) = k) : x < 3^k :=
   sorry
