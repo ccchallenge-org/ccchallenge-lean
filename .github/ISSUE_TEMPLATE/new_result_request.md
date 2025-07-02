@@ -17,4 +17,5 @@ to them by doing, e.g. `https://ccchallenge.org/#BohmSontacchi1978`.
 ### Choose either option
 - [ ] I plan on working on the statement
 - [ ] I plan on working on the proof
-- [ ] This issue is up for grabs
+- [ ] I don't mind if someone else works on it too
+- [ ] This issue is up for grabs: I don't plan working on this
