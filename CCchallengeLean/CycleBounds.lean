@@ -34,6 +34,8 @@ also have $x < 3^k$ where $k$ is the number of odd indices in the first n iterat
 Note: the proof is (highly) nontrivial, relying on [Rhin1976](https://ccchallenge.org/#Rhin1976).
 The corollary is easy to get using [Sterin2023](https://ccchallenge.org/#Sterin2023), see [sketch](https://forum.collatzworld.com/t/elementary-proof-of-x-2-n-in-a-cycle-of-size-n/67/4?u=cosmo).
 
+Result also discussed in [this thread](https://forum.collatzworld.com/t/elementary-proof-of-x-2-n-in-a-cycle-of-size-n/67/4).
+
 Reference: [Rozier2022](https://ccchallenge.org/#Rozier2022)
 -/
 theorem Rozier2022

@@ -14,8 +14,7 @@ A description, ideally with some reference to the informal version of the conjec
 Ideally, please add all references to [https://ccchallenge.org/](https://ccchallenge.org/) and refer
 to them by doing, e.g. `https://ccchallenge.org/#BohmSontacchi1978`.
 
-### Choose either option
+### Choose options
 - [ ] I plan on working on the statement
 - [ ] I plan on working on the proof
 - [ ] I don't mind if someone else works on it too
-- [ ] This issue is up for grabs: I don't plan working on this
