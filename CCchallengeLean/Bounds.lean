@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Nat.Basic
+import Mathlib.Algebra.Group.Basic
 
 open Nat
 
@@ -107,3 +108,42 @@ lemma magic_factorization_positive
     have : 2^k + 6 * 9^k > 7 * 6^k := by linarith [key_ineq, h_pos]
     -- Therefore 2^k + 6 * 9^k - 7 * 6^k > 0
     exact Nat.sub_pos_of_lt this
+
+def max_circuit_element (n k : ℤ) : ℚ :=
+  2^(n-k)*(3^k-2^k)/(2^n - 3^k)
+
+def max_circuit_element_ratio_k (n k : ℤ) : ℚ :=
+  (max_circuit_element n (k) : ℚ) / (max_circuit_element n (k+1) : ℚ)
+
+def max_circuit_element_ratio_k_rewritten (n k : ℤ) : ℚ :=
+  2*(3^k - 2^k)*(2^n - 3^(k+1)) /
+  ((2^n - 3^k)*(3^(k+1) - 2^(k+1)))
+
+lemma pow_two_diff (n k : ℤ) : (2 : ℚ) ^ (n - k) / 2 ^ (n - k - 1) = 2 := by
+  rw [← zpow_sub₀ (by norm_num : (2 : ℚ) ≠ 0)]
+  ring
+  ring
+
+lemma isolate_power_factor (n k : ℤ) (A B C D: ℚ) :
+  (2 ^ (n - k) * A * B) / (C *(2 ^ (n - k - 1) * D)) =
+  (2 ^ (n - k) / 2 ^ (n - k - 1)) * (A * B / (C * D)) := by
+  field_simp
+  ring
+
+-- Statement of the ratio result
+lemma max_circuit_element_ratio (n k : ℤ) :
+    max_circuit_element_ratio_k n k = max_circuit_element_ratio_k_rewritten n k := by
+  -- This is standard algebra - the proof involves:
+  unfold max_circuit_element_ratio_k max_circuit_element_ratio_k_rewritten max_circuit_element
+
+  -- Step 1: Apply the division rule using div_div_div_eq
+  -- We have: (a / b) / (c / d) = (a * d) / (b * c)
+  rw [div_div_div_eq]
+
+  -- Step 2: Simplify n - (k+1) = n - k - 1
+  -- Use explicit rewrite with the subtraction identity
+  rw [show ∀ n k : ℤ, n - (k + 1) = n - k - 1 by intros; omega]
+
+  rw [isolate_power_factor]
+  rw [pow_two_diff]
+  ring
