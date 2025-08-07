@@ -111,6 +111,268 @@ How can I use pow_two_diff in order to simplify fraction 2^(n-k)/2^(n-k-1)
 
 _**Assistant**_
 
+I can see you have a `pow_two_diff` lemma that proves exactly what you need! Let me look at how you can use it in the `max_circuit_element_ratio` proof.
+
+Looking at your `pow_two_diff` lemma:
+```lean
+lemma pow_two_diff (n k : ℤ) : (2 : ℚ) ^ (n - k) / 2 ^ (n - k - 1) = 2 := by
+  rw [← zpow_sub₀ (by norm_num : (2 : ℚ) ≠ 0)]
+  ring
+  ring
+```
+
+This is perfect for simplifying the fraction `2^(n-k)/2^(n-k-1)` that appears in your algebraic manipulations. Let me help you continue the proof: 
+```
+
+```
+I see the issue. The pattern doesn't match exactly because the expression has been rewritten. Let me fix this by simplifying the casting and targeting the right pattern: 
+```
+
+```
+The issue is that applying `pow_two_diff` directly is causing complications with the type casting. Let me try a more direct approach by working with the specific structure of the expression: 
+```
+
+```
+The `mul_div_assoc` is creating side conditions. Let me try a more direct approach by manually rewriting the specific pattern: 
+```
+
+```
+Let me try a more targeted approach. I'll look at the exact form after the first two steps and then apply the power simplification directly: 
+```
+
+```
+The approach is getting complex. Let me step back and provide a cleaner way to use `pow_two_diff`. Since your lemma works with integers, let me show you how to apply it directly: 
+
+---
+
+_**User**_
+
+Can you fix lt_iff_neg_add_pos
+
+---
+
+_**Assistant**_
+
+I can see the issue with `lt_iff_neg_add_pos`. The lemma is trying to prove `a < b ↔ 0 < -a + b`, but the proof is using `sub_pos` which gives us `0 < b - a`, not `0 < -a + b`. Let me fix this: 
+```
+
+```
+Let me fix the `lt_iff_neg_add_pos` lemma properly. The issue is that I need to correctly relate `a < b` to `0 < -a + b`: 
+```
+
+```
+Let me use the correct lemma names and simplify this: 
+```
+
+```
+Let me fix the line length and also fix the unknown identifier issue: 
+```
+
+```
+
+
+---
+
+_**User**_
+
+Can you prove helper 2
+
+---
+
+_**Assistant**_
+
+I can see that `helper2` is trying to prove that negating a fraction with `(2^n - 3^k)` in the denominator gives you a fraction with `(3^k - 2^n)` in the denominator. This is based on the fact that `-(2^n - 3^k) = 3^k - 2^n`. Let me complete the proof: 
+```
+
+```
+The issue is that `neg_div` expects the pattern `-(b/a)` but we have `-(A/((2^n - 3^k)*B))`. Let me fix this by using the correct form: 
+```
+
+```
+Let me try a different approach. The key insight is that we need to show that negating the entire fraction is equivalent to negating the denominator: 
+```
+
+```
+I see the issue - the powers need to be cast to rationals properly. Let me fix this: 
+```
+
+```
+Perfect! The `helper2` lemma should now compile correctly. The proof works by:
+
+1. First showing that `(3^k - 2^n) = -(2^n - 3^k)` using `ring` 
+2. Then substituting this into the goal
+3. Using the fact that `A / (-(expr) * B) = -(A / (expr * B))` through `neg_mul` and `div_neg`
+
+This lemma is 
+
+---
+
+_**User**_
+
+Can you prove helper 3
+
+---
+
+_**Assistant**_
+
+I can see that `helper3` has some issues in its statement. First, there are duplicate parameter declarations `(n k : ℤ) (n k: ℤ)`, and the proof is trying to prove an algebraic identity. Let me fix the statement and provide the proof: 
+```
+
+```
+The `ring` tactic isn't able to prove this directly because the algebraic manipulation is quite complex. Let me break it down step by step or check if this identity is actually correct. Let me try expanding some terms and using more specific algebraic lemmas: 
+```
+
+```
+I can see that the algebraic identity in `helper3` might be incorrect or very complex. Looking at the error message from `key_ineq`, it seems like you're trying to prove a different statement than what `helper3` claims. 
+
+Let me check if this identity is even needed or if there's a simpler approach. The goal in `key_ineq` seems to be showing that a certain fraction is positive, not that it equals a specific expression involving powers.
+
+Let me suggest a different approach. Instead of trying to prove this complex algebraic identity, let's see if we can prove the inequality directly or if the identity statement needs to be corrected: 
+```
+
+```
+Looking at the actual goal in `key_ineq`, it seems like you need to prove that a certain fraction is positive (greater than 0), not that it equals a specific algebraic expression. Let me suggest focusing on what you actually need: 
+```
+
+```
+
+
+---
+
+_**User**_
+
+Can you prove helper4 (use std library)?
+
+---
+
+_**Assistant**_
+
+I can see that `helper4` is trying to prove `(3: ℚ)^k*2^n*3 = 2^n * 3^(1+k)`. This is a simple algebraic identity that can be proven using properties of exponents. Let me prove it: 
+```
+
+```
+Let me fix the approach. The issue is that I'm overcomplicating it. Let me use a simpler approach: 
+```
+
+```
+I need to first rewrite `3` as `3^1` to use the power addition rule. Let me fix this: 
+```
+
+```
+I see the issue - I'm overcomplicating this. The simplest approach is to use the fact that `3^k * 3 = 3^(k+1)`. Let me try a much simpler approach: 
+```
+
+```
+The issue is that after `ring_nf`, the expression isn't in the right form for `zpow_add`. Let me try the most direct approach: 
+```
+
+```
+Let me try the simplest possible approach - just use basic power and multiplication properties: 
+```
+
+```
+I need to first convert `3` to `3^1` explicitly. Let me fix this: 
+```
+
+```
+Let me simplify this drastically and just use the basic fact that should work: 
+```
+
+```
+The core issue is that this identity `(3: ℚ)^k*2^n*3 = 2^n * 3^(1+k)` should be trivial from basic properties of exponents. Let me just use the simplest approach - pure ring manipulation: 
+```
+
+```
+I need to write `3` as `3^1` first. Let me try one more approach: 
+```
+
+```
+This is a simple algebra identity and should be provable directly. Let me try the most straightforward approach: 
+```
+
+```
+Great! `helper4` is now proven. It worked because `simp` was able to automatically apply the power addition laws and ring normalization. The key insight was to use `simp only` with the specific lemmas `zpow_add₀` and `zpow_one`, which automatically handled the conversion of `3` to `3^1` and the addition of exponents.
+
+---
+
+_**User**_
+
+Can you prove helper5 (using std library)
+
+---
+
+_**Assistant**_
+
+Looking at `helper5`, it's trying to prove `(3: ℚ)^(1+k)*2^k*3 = 9*6^k`. Let me break this down:
+
+- Left side: `3^(1+k) * 2^k * 3`
+- Right side: `9 * 6^k`
+
+Since `6^k = (2*3)^k = 2^k * 3^k` and `9 = 3^2`, this should be provable using power laws. 
+```
+
+```
+Let me fix the unused simp argument: 
+```
+
+```
+Perfect! `helper5` is now proven. The proof works by:
+
+1. First rewriting `6^k` as `(2*3)^k` 
+2. Using `mul_zpow` to expand it to `2^k * 3^k`
+3. Rewriting `9` as `3^2`
+4. Using `zpow_add₀` and `zpow_one` to handle the power addition laws
+5. Finally using `ring` to complete the algebraic manipulation
+
+The key insight was to break down both sides into their prime factorizations and then use the standard power laws to show they're equal.
+
+---
+
+_**User**_
+
+Can you prove helper6
+
+---
+
+_**Assistant**_
+
+Looking at `helper6`, it's trying to prove `(3: ℚ)^k*2^(1+k) = 2*6^k`. Let me break this down:
+
+- Left side: `3^k * 2^(1+k)`
+- Right side: `2 * 6^k`
+
+Since `6^k = (2*3)^k = 2^k * 3^k` and `2^(1+k) = 2^1 * 2^k = 2 * 2^k`, this should be provable using similar techniques as the previous helpers. 
+```
+
+```
+
+
+---
+
+_**User**_
+
+Can you prove helper7, helper8 and helper9? THank you!
+
+---
+
+_**Assistant**_
+
+I'll prove all three helpers. Let me start with `helper7`, `helper8`, and `helper9`: 
+```
+
+```
+
+
+---
+
+_**User**_
+
+Can you fix helper 8
+
+---
+
+_**Assistant**_
+
 
 
 ---

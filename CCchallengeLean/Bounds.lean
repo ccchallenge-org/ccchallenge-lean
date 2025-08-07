@@ -147,3 +147,94 @@ lemma max_circuit_element_ratio (n k : ℤ) :
   rw [isolate_power_factor]
   rw [pow_two_diff]
   ring
+
+lemma helper (A B C D: ℚ): 2*A*B/(C*D)/2 = A*B/(C*D) := by
+  ring
+
+lemma lt_iff_neg_add_pos {α : Type*} [AddCommGroup α] [LinearOrder α]
+    [CovariantClass α α (· + ·) (· ≤ ·)] (a b : α) :
+    a < b ↔ 0 < -a + b := by
+  rw [← sub_pos, sub_eq_add_neg, add_comm]
+
+lemma helper2 (n k: ℤ) (A B): -(A/(((2 : ℚ)^n - 3^k)*B)) = A / ((3^k - 2^n)*B) := by
+  have h : ((3 : ℚ)^k - 2^n) = -((2 : ℚ)^n - 3^k) := by ring
+  rw [h]
+  rw [neg_mul, div_neg]
+
+lemma helper4 (n k: ℤ): (3: ℚ)^k*2^n*3 = 2^n * 3^(1+k) := by
+  simp only [zpow_add₀ (by norm_num : (3 : ℚ) ≠ 0), zpow_one]
+  ring
+
+lemma helper5 (k: ℤ): (3: ℚ)^(1+k)*2^k*3 = 9*6^k := by
+  -- Rewrite 6^k = (2*3)^k = 2^k * 3^k
+  rw [show (6 : ℚ)^k = (2*3)^k by norm_num]
+  rw [mul_zpow]
+  -- Rewrite 9 = 3^2
+  rw [show (9 : ℚ) = 3^2 by norm_num]
+  -- Now we have: 3^(1+k) * 2^k * 3 = 3^2 * 2^k * 3^k
+  -- Simplify using power laws
+  simp only [zpow_add₀ (by norm_num : (3 : ℚ) ≠ 0), zpow_one]
+  ring
+
+lemma helper6 (k: ℤ): (3: ℚ)^k*2^(1+k) = 2*6^k := by
+  -- Rewrite 6^k = (2*3)^k = 2^k * 3^k
+  rw [show (6 : ℚ)^k = (2*3)^k by norm_num]
+  rw [mul_zpow]
+  -- Rewrite 2^(1+k) = 2^1 * 2^k = 2 * 2^k
+  rw [zpow_add₀ (by norm_num : (2 : ℚ) ≠ 0)]
+  rw [zpow_one]
+  -- Now we have: 3^k * (2 * 2^k) = 2 * (2^k * 3^k)
+  ring
+
+lemma helper7 (n k: ℤ): (2: ℚ)^n * 2^k = 2^(n+k) := by
+  rw [← zpow_add₀ (by norm_num : (2 : ℚ) ≠ 0)]
+
+lemma helper8 (n k: ℤ): (2: ℚ)^(1+k+n) = 2*2^(n+k) := by
+  -- First rewrite 1+k+n as 1+(k+n)
+  rw [show 1 + k + n = 1 + (k + n) by ring]
+  -- Then use zpow_add to split 2^(1+(k+n)) = 2^1 * 2^(k+n)
+  rw [zpow_add₀ (by norm_num : (2 : ℚ) ≠ 0)]
+  -- Simplify 2^1 = 2
+  rw [zpow_one]
+  -- Finally use commutativity to get 2 * 2^(k+n) = 2 * 2^(n+k)
+  rw [show k + n = n + k by ring]
+
+lemma helper9 (k: ℤ): (3: ℚ)^(k)*3^(1+k) = 3^(2*k+1) := by
+  rw [← zpow_add₀ (by norm_num : (3 : ℚ) ≠ 0)]
+  ring
+
+
+lemma helper3 (n k: ℤ): (((3: ℚ)^k - 2^k)*(2^n - 3^(k+1))*3 + ((3: ℚ)^k - 2^n)*(3^(k+1)- 2^(k+1))) =(-2^(k+n) - 2*3^(2*k+1)+7*6^k) := by
+  ring
+  ring
+  rw [helper4]
+  simp
+  ring
+  rw [helper5]
+  rw [helper6]
+  ring
+  rw [helper7]
+  rw [helper7]
+  ring
+  rw [helper8]
+  ring
+  rw [helper9]
+  ring
+
+lemma helper10 (A B: ℚ): A/B > 0 ↔ A*B > 0 := by
+  simp only [div_pos_iff, mul_pos_iff]
+
+
+lemma key_ineq (n k : ℤ):
+  (max_circuit_element_ratio_k n k)/2 < 1/3 := by
+  rw [max_circuit_element_ratio]
+  unfold max_circuit_element_ratio_k_rewritten
+  rw [helper]
+  rw [lt_iff_neg_add_pos]
+  rw [<- gt_iff_lt]
+  rw [helper2]
+  rw [div_add_div]
+  ·
+
+  · sorry
+  · simp
