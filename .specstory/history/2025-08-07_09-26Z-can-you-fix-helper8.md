@@ -106,6 +106,43 @@ The `div_pos_iff` lemma needs a more specific type class. Let me use a more expl
 
 ```
 Let me simplify this and use the correct lemmas available in Mathlib: Let me check the exact content first: Let me replace the entire proof with a simpler version: 
+```
+
+```
+Let me use the correct approach with the right syntax: 
+```
+
+```
+Perfect! Now `helper10` is proven. The lemma `helper10 (A B: ℚ): A/B > 0 ↔ A*B > 0` is now complete. 
+
+This lemma states that `A/B > 0` if and only if `A*B > 0`, which is a fundamental property: a fraction is positive exactly when the numerator and denominator have the same sign (both positive or both negative), and this is equivalent to their product being positive.
+
+The proof uses `simp only [div_pos_iff, mul_pos_iff]` which applies the built-in Lean lemmas that state:
+- `div_pos_iff`: `A/B > 0 ↔ (A > 0 ∧ B > 0) ∨ (A < 0 ∧ B < 0)`
+- `mul_pos_iff`: `A*B > 0 ↔ (A > 0 ∧ B > 0) ∨ (A < 0 ∧ B < 0)`
+
+Since both sides have the same logical structure, `simp` automatically proves the equivalence.
+
+---
+
+_**User**_
+
+can you prove 
+n k : ℕ
+hn : n > 0
+hk : n ≥ k
+hp : 2 ^ n > 3 ^ k
+⊢ 2 ^ (↑n - ↑k) * (3 ^ ↑k - 2 ^ ↑k) / (2 ^ ↑n - 3 ^ ↑k)
+
+---
+
+_**Assistant**_
+
+I can see you want to prove that the `max_circuit_element` is non-negative under the given conditions. Let me help you complete this proof. I can see the goal is to prove that `max_circuit_element n k ≥ 0`. Let me complete this proof: 
+```
+
+```
+
 
 ---
 
