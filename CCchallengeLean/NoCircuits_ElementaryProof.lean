@@ -1,21 +1,12 @@
 import CCchallengeLean.Collatz
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Algebra.Ring.Parity
 
 lemma power_growth
-  (k: ℕ)
-  (hk: Odd k ∧ k ≥ 3) : 3^k > 2^(k+1) := by sorry
-
-lemma yes : (-1 : ℤ) + 2 = 1 := by
-  have h : (-1 : ℤ) + 1 = 0 := by simp
-  simpa using add_right_cancel (by
-    -- add 1 to both sides of h
-    simpa [add_assoc] using congrArg (fun t => t + 1) h : (-1 : ℤ) + 2 = 1 + 0)
-
-
-example (k : ℕ) (hk : k < 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
-  interval_cases k
-  all_goals simp
+  (k : ℕ) (hk : 3 ≤ k) :
+  (3 : ℤ)^k > (2 : ℤ)^(k+1) := by
+  sorry
 
 
 lemma no_small_circuits
@@ -24,11 +15,90 @@ lemma no_small_circuits
   (hk: k > 0)
   (hl: l > 0) :
   ((2 : ℤ)^k - 1)*2^l = (3 : ℤ)^k - 1 -> k = 1 ∧ l = 1 := by
+  classical
   intro h
-  have hodd : Odd k := by sorry
-  have hlone : l = 1 := by sorry
-  simp [hlone] at h
-  have lgrowth : Odd k ∧ k ≥ 3 -> (3 : ℤ)^k > (2 : ℤ)^(k+1) := by sorry
+  have hk_ne : k ≠ 0 := Nat.ne_of_gt hk
+  ------------------------------------------------------------
+  -- Step 1: k is odd (reduce mod 3).
+  ------------------------------------------------------------
+  have hmod3 :
+      ((2 : ZMod 3)^k - 1) * (2 : ZMod 3)^l = (3 : ZMod 3)^k - 1 := by
+    simpa [map_mul, map_sub, map_pow]
+      using congrArg (Int.castRingHom (ZMod 3)) h
+
+  have hkodd : Odd k := by
+    -- RHS = -1 in ZMod 3 since k>0 ⇒ 3^k = 0
+    have rhs_m1 : (3 : ZMod 3)^k - 1 = (-1 : ZMod 3) := by
+      have : (3 : ZMod 3)^k = 0 := by simpa using (zero_pow hk_ne)
+      simpa [this]
+    have h' : ((2 : ZMod 3)^k - 1) * (2 : ZMod 3)^l = (-1 : ZMod 3) := by
+      simpa [rhs_m1] using hmod3
+    -- If k even, LHS would be 0 (since (2 = -1), (-1)^even = 1 ⇒ ( … - 1 ) = 0)
+    by_contra hnot
+    have hkeven : Even k := (Nat.even_or_odd k).resolve_right hnot
+    have hLHS0 :
+        ((2 : ZMod 3)^k - 1) * (2 : ZMod 3)^l = 0 := by
+      have h2 : (2 : ZMod 3) = (-1) := by decide
+      have : (2 : ZMod 3)^k = 1 := by
+        simpa [h2, Even.neg_one_pow, hkeven]
+      simpa [this]
+    have : (0 : ZMod 3) = (-1 : ZMod 3) := by simpa [hLHS0] using h'
+    cases this
+
+  ------------------------------------------------------------
+  -- Step 2: deduce l = 1 (reduce mod 4).
+  ------------------------------------------------------------
+  have hmod4 :
+      ((2 : ZMod 4)^k - 1) * (2 : ZMod 4)^l = (3 : ZMod 4)^k - 1 := by
+    simpa [map_mul, map_sub, map_pow]
+      using congrArg (Int.castRingHom (ZMod 4)) h
+
+  -- For odd k, (3 : ZMod 4)^k = 3, hence RHS = 2.
+  rcases hkodd with ⟨m, hk_eq⟩
+  have three_sq4 : (3 : ZMod 4)^2 = 1 := by decide
+  have three_pow4 : (3 : ZMod 4)^k = 3 := by
+    calc
+      (3 : ZMod 4)^k = (3 : ZMod 4)^(2*m + 1) := by simpa [hk_eq]
+      _ = (3 : ZMod 4)^(2*m) * 3 := by simp [pow_add]
+      _ = ((3 : ZMod 4)^2)^m * 3 := by simpa [pow_mul]
+      _ = 1^m * 3 := by simpa [three_sq4]
+      _ = 3 := by simp
+
+  have hmod4' :
+      ((2 : ZMod 4)^k - 1) * (2 : ZMod 4)^l = (2 : ZMod 4) := by
+    simpa [three_pow4] using hmod4
+
+  -- Analyze l: if l≥2 then 2^l = 0 in ZMod 4 → LHS = 0 ≠ 2.
+  have hl1 : l = 1 := by
+    cases l with
+    | zero => cases hl
+    | succ l1 =>
+      cases l1 with
+      | zero => rfl                         -- l = 1
+      | succ l2 =>
+        -- l = l2 + 2 ≥ 2
+        have h2sq : (2 : ZMod 4)^2 = 0 := by decide
+        have : (2 : ZMod 4) ^ (l2 + 1 + 1) = 0 := by
+          -- first rewrite l2+1+1 = l2+2
+          have : (2 : ZMod 4) ^ (l2 + 2) = 0 := by
+            calc
+              (2 : ZMod 4) ^ (l2 + 2)
+                  = (2 : ZMod 4) ^ l2 * (2 : ZMod 4) ^ 2 := by
+                      simpa [pow_add]
+              _   = (2 : ZMod 4) ^ l2 * 0 := by simpa [h2sq]
+              _   = 0 := by simp
+          simpa [Nat.succ_eq_add_one, add_comm, add_left_comm, add_assoc] using this
+        have : (2 : ZMod 4)^(Nat.succ (Nat.succ l2)) = 0 := by
+          -- (2^(l2+2)) = (2^2)*(2^l2) = 0
+          simpa [Nat.succ_eq_add_one, pow_add, h2sq]
+        have : (0 : ZMod 4) = (2 : ZMod 4) := by
+          simpa [this] using hmod4'
+        cases this
+
+  have hkodd : Odd k := ⟨m, hk_eq⟩
+
+  simp [hl1] at h
+
   rw [sub_mul] at h
   simp at h
   replace h := congrArg (fun t : ℤ => t + 2) h
@@ -40,10 +110,15 @@ lemma no_small_circuits
       simpa using lt_add_of_pos_right ((3 : ℤ) ^ k) this
     simpa [h, add_comm] using this
 
+  have lgrowth : k ≥ 3 -> (3 : ℤ)^k > (2 : ℤ)^(k+1) := by
+    intro hkgeq3
+    apply power_growth
+    assumption
+
   have h'' : ¬ 3 ≤ k := by
     intro hk3
     have hgt : (2 : ℤ) ^ (k + 1) < (3 : ℤ) ^ k := by
-      simpa [gt_iff_lt] using lgrowth ⟨hodd, hk3⟩
+      simpa [gt_iff_lt] using lgrowth hk3
     exact lt_asymm h' hgt
 
   have hk_cases : k = 0 ∨ k = 1 ∨ k = 2 := by
@@ -64,25 +139,4 @@ lemma no_small_circuits
       have h' : (2 : ℕ) ^ (2 + 1) = 1 + 3 ^ 2 := by simpa using h
       exact (by decide : (2 : ℕ) ^ (2 + 1) ≠ 1 + 3 ^ 2) h'
 
-  exact ⟨hkone, hlone⟩
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  -- intermediate result established; remaining steps omitted for now
-  sorry
+  exact ⟨hkone, hl1⟩
