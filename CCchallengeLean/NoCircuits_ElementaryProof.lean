@@ -2,11 +2,24 @@ import CCchallengeLean.Collatz
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.Ring.Parity
+import Mathlib.Data.Nat.Init
 
-lemma power_growth
-  (k : ℕ) (hk : 3 ≤ k) :
-  (3 : ℤ)^k > (2 : ℤ)^(k+1) := by
-  sorry
+/--
+Proof of `power_growth` due to Robin Arnez
+https://leanprover.zulipchat.com/#narrow/channel/113488-general/topic/Struggling.20with.20simple.20Lemma.3A.203.5Ek.20.20.3E.202.5E.28k.2B1.29.2C.20k.20.3E.3D.202/near/537996466
+-/
+theorem power_growth
+    (k : Nat) (hk : k ≥ 2) :
+    (3 : Int)^k > (2 : Int)^(k+1) := by
+  norm_cast
+  obtain ⟨a, rfl⟩ := Nat.exists_eq_add_of_le' hk
+  simp only [Nat.pow_succ, Nat.mul_assoc, Nat.reduceMul]
+  apply Nat.mul_lt_mul_of_le_of_lt
+  · apply Nat.pow_le_pow_left
+    decide
+  · decide
+  · apply Nat.pow_pos
+    decide
 
 
 lemma no_small_circuits
@@ -112,6 +125,8 @@ lemma no_small_circuits
 
   have lgrowth : k ≥ 3 -> (3 : ℤ)^k > (2 : ℤ)^(k+1) := by
     intro hkgeq3
+    have hkgeq2 : k ≥ 2 := Nat.le_trans (by decide : 3 ≥ 2) hkgeq3
+
     apply power_growth
     assumption
 
