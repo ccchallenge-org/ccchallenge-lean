@@ -21,7 +21,12 @@ theorem power_growth
   · apply Nat.pow_pos
     decide
 
+/--
 
+The non-formal proof of `no_small_circuits` was found by ChatGPT 5: https://chatgpt.com/share/68bc4fad-e1dc-8005-91b9-94aef333d644
+
+The formal proof was also written iterating with ChatGPT and other similar AI tools.
+-/
 lemma no_small_circuits
   (k: ℕ)
   (l: ℕ)
